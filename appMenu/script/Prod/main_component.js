@@ -19095,25 +19095,35 @@ ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementB
 
 },{"../resourse/content":164,"./table_component":161,"react":159,"react-dom":3}],161:[function(require,module,exports){
 var React = require('react');
-var Tr = require('./tr_component');
+var Obj = require('./tr_component');
 
 var Table = React.createClass({
   displayName: 'Table',
 
+
+  handleClick: function () {
+    alert(Obj.ListStore.orderList[0].name);
+  },
+
   render: function () {
     var menuList = [];
     menuList = this.props.menu.map(function (value, index) {
-      return React.createElement(Tr, { peair: value, index: index, key: index });
+      return React.createElement(Obj.Tr, { peair: value, index: index, key: index });
     });
 
     return React.createElement(
-      'table',
+      'div',
       null,
       React.createElement(
-        'tbody',
+        'table',
         null,
-        menuList
-      )
+        React.createElement(
+          'tbody',
+          null,
+          menuList
+        )
+      ),
+      React.createElement('input', { type: 'button', value: 'but', onClick: this.handleClick })
     );
   }
 });
@@ -19146,9 +19156,7 @@ AppDispatcher.register(function (payload) {
       var ind = ListStore.orderList.map(function (val) {
         return val.name;
       }).indexOf(payload.itemFood.name);
-      alert(ListStore.orderList);
       ListStore.orderList.splice(ind, 1);
-      alert(ListStore.orderList);
       break;
     default:
 
@@ -19210,7 +19218,7 @@ var Tr = React.createClass({
   }
 });
 
-module.exports = Tr;
+module.exports = { "Tr": Tr, "ListStore": ListStore };
 
 },{"../resourse/Dispatcher":163,"../resourse/microevent":165,"react":159}],163:[function(require,module,exports){
 /**

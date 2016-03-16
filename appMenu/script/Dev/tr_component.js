@@ -75,4 +75,4 @@ var Tr = React.createClass({
   }
 });
 
-module.exports = Tr;
+module.exports = {"Tr": Tr, "ListStore": ListStore};
