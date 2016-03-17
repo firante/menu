@@ -1,3 +1,64 @@
-.count {
+#content {
+  width: 60%;
+  margin: auto;
+}
+
+/*
+* order divs and li
+*/
+
+.div_order {
+  width: 100%;
+  float: left;
+}
+
+ul li {
+  width: 100%;
+  list-style-type: none;
+}
+ /*
+ * table class
+ */
+ .order_table {
+   width: 100%;
+   text-align: center;
+ }
+
+ .order_table thead tr td{
+   padding-top: 10px;
+   padding-bottom: 10px;
+   background-color: grey;
+ }
+
+ .td_name {
+   width: 38%;
+   float: left;
+ }
+
+ .td_small {
+   width: 20%;
+   float: left;
+ }
+
+ .fullPrice {
+   float: right;
+   margin-right: 60px;
+ }
+
+/*
+* buttons
+*/
+
+.butt_toMenu {
+  float: left;
+  margin-left: 60px;
+}
+
+.butt_toPDF {
+  float: right;;
+  margin-right: 60px;
+}
+
+.inp_count {
   width: 20px;
 }

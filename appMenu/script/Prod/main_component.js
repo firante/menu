@@ -19093,8 +19093,154 @@ var Menu = require('../resourse/content');
 
 ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementById('content'));
 
-},{"../resourse/content":164,"./table_component":161,"react":159,"react-dom":3}],161:[function(require,module,exports){
+},{"../resourse/content":165,"./table_component":162,"react":159,"react-dom":3}],161:[function(require,module,exports){
 var React = require('react');
+var ReactDOM = require('react-dom');
+var Menu = require('../resourse/content');
+var Table = require('./table_component');
+
+var Order = React.createClass({
+  displayName: 'Order',
+
+
+  handleToMenu: function () {
+    ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementById('content'));
+  },
+
+  handleToPdf: function () {
+    var pdf = new jsPDF('p', 'pt', 'letter');
+    var source = $('#topdf').html();
+    var specialElementHandlers = {
+      '#bypassme': function (element, renderer) {
+        return true;
+      }
+    },
+        margins = {
+      top: 20,
+      bottom: 20,
+      left: 15,
+      right: 15
+    };
+    pdf.setFont("Times-Roman");
+    pdf.setFontType("bold");
+    pdf.setFontSize(9);
+    pdf.setFontStyle('italic');
+    pdf.fromHTML(source, margins.left, margins.top, {
+      'width': margins.width,
+      'elementHandlers': specialElementHandlers
+    }, function (dispose) {
+      pdf.save('Order.pdf');
+    }, margins);
+  },
+
+  render: function () {
+    var order_list = this.props.orderList.map(function (value, index) {
+      return React.createElement(
+        'tr',
+        { key: index },
+        React.createElement(
+          'td',
+          { className: 'td_name' },
+          value.name,
+          ' '
+        ),
+        React.createElement(
+          'td',
+          { className: 'td_small' },
+          value.count
+        ),
+        React.createElement(
+          'td',
+          { className: 'td_small' },
+          value.price
+        ),
+        React.createElement(
+          'td',
+          { className: 'td_small' },
+          value.price * value.count
+        )
+      );
+    });
+    return React.createElement(
+      'div',
+      { className: 'div_order' },
+      React.createElement(
+        'div',
+        { id: 'topdf', className: 'div_order' },
+        React.createElement(
+          'table',
+          { className: 'order_table' },
+          React.createElement(
+            'thead',
+            null,
+            React.createElement(
+              'tr',
+              null,
+              React.createElement(
+                'td',
+                { className: 'td_name' },
+                ' Dish Name '
+              ),
+              React.createElement(
+                'td',
+                { className: 'td_small' },
+                ' Count '
+              ),
+              React.createElement(
+                'td',
+                { className: 'td_small' },
+                ' Price per piece '
+              ),
+              React.createElement(
+                'td',
+                { className: 'td_small' },
+                ' Total price '
+              )
+            )
+          ),
+          React.createElement(
+            'tbody',
+            null,
+            order_list
+          )
+        ),
+        React.createElement('br', null),
+        React.createElement('br', null),
+        React.createElement(
+          'span',
+          { className: 'fullPrice' },
+          ' Payable: ',
+          this.props.fullPrice,
+          ' '
+        )
+      ),
+      React.createElement('br', null),
+      React.createElement('br', null),
+      React.createElement(
+        'div',
+        { className: 'div_order' },
+        React.createElement('input', {
+          className: 'butt_toMenu',
+          type: 'button',
+          value: 'To menu',
+          onClick: this.handleToMenu }),
+        React.createElement('input', {
+          className: 'butt_toPDF',
+          type: 'button',
+          value: 'To PDF',
+          onClick: this.handleToPdf
+        })
+      )
+    );
+  }
+});
+
+module.exports = Order;
+
+},{"../resourse/content":165,"./table_component":162,"react":159,"react-dom":3}],162:[function(require,module,exports){
+var React = require('react');
+var ReactDOM = require('react-dom');
+var Order = require('./order_component');
 var Obj = require('./tr_component');
 
 var Table = React.createClass({
@@ -19102,7 +19248,7 @@ var Table = React.createClass({
 
 
   handleClick: function () {
-    alert(Obj.ListStore.getTotalAmount());
+    ReactDOM.render(React.createElement(Order, { orderList: Obj.ListStore.getOrder(), fullPrice: Obj.ListStore.getTotalAmount() }), document.getElementById('content'));
   },
 
   render: function () {
@@ -19123,14 +19269,14 @@ var Table = React.createClass({
           menuList
         )
       ),
-      React.createElement('input', { type: 'button', value: 'but', onClick: this.handleClick })
+      React.createElement('input', { type: 'button', value: 'Order', onClick: this.handleClick })
     );
   }
 });
 
 module.exports = Table;
 
-},{"./tr_component":162,"react":159}],162:[function(require,module,exports){
+},{"./order_component":161,"./tr_component":163,"react":159,"react-dom":3}],163:[function(require,module,exports){
 var React = require('react');
 var Dispatcher = require('../resourse/Dispatcher');
 var MicroEvent = require('../resourse/microevent');
@@ -19147,7 +19293,7 @@ var ListStore = {
   getTotalAmount() {
     var t_amount = 0;
     this.orderList.forEach(function (value) {
-      t_amount += parseInt(value.price, 10);
+      t_amount += parseInt(value.price, 10) * parseInt(value.count, 10);
     });
     return t_amount;
   }
@@ -19166,6 +19312,16 @@ AppDispatcher.register(function (payload) {
       }).indexOf(payload.itemFood.name);
       ListStore.orderList.splice(ind, 1);
       break;
+    case "changeCount":
+      ListStore.orderList = ListStore.orderList.map(function (val) {
+        if (val.name == payload.itemFood.name) {
+          val.count = payload.itemFood.count;
+          return val;
+        } else {
+          return val;
+        }
+      });
+      break;
     default:
 
   }
@@ -19174,7 +19330,7 @@ AppDispatcher.register(function (payload) {
 var Tr = React.createClass({
   displayName: 'Tr',
 
-  handleChange: function () {
+  handleChangeCheck: function () {
     if (this.refs.checks.checked) {
       AppDispatcher.dispatch({
         eventName: 'addFood',
@@ -19188,6 +19344,13 @@ var Tr = React.createClass({
     }
   },
 
+  handleChangeCount: function () {
+    AppDispatcher.dispatch({
+      eventName: 'changeCount',
+      itemFood: { name: this.refs.name.innerText, count: this.refs.count.value }
+    });
+  },
+
   render: function () {
     return React.createElement(
       'tr',
@@ -19197,7 +19360,7 @@ var Tr = React.createClass({
         null,
         React.createElement('input', {
           type: 'checkbox',
-          onChange: this.handleChange,
+          onChange: this.handleChangeCheck,
           ref: 'checks'
         })
       ),
@@ -19206,9 +19369,10 @@ var Tr = React.createClass({
         null,
         React.createElement('input', {
           type: 'text',
-          className: 'count',
+          className: 'inp_count',
           defaultValue: '1',
-          ref: 'count' })
+          ref: 'count',
+          onChange: this.handleChangeCount })
       ),
       React.createElement(
         'td',
@@ -19228,7 +19392,7 @@ var Tr = React.createClass({
 
 module.exports = { "Tr": Tr, "ListStore": ListStore };
 
-},{"../resourse/Dispatcher":163,"../resourse/microevent":165,"react":159}],163:[function(require,module,exports){
+},{"../resourse/Dispatcher":164,"../resourse/microevent":166,"react":159}],164:[function(require,module,exports){
 /**
  * Copyright (c) 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -19445,12 +19609,12 @@ class Dispatcher {
 
 module.exports = Dispatcher;
 
-},{"invariant":2}],164:[function(require,module,exports){
-var Menu = [{ "name": "Салат Цезар", "price": "22" }, { "name": "Хліб", "price": "1" }, { "name": "Курка", "price": "32" }, { "name": "Салат Грецький", "price": "10" }, { "name": "Суп Гречаний", "price": "11" }, { "name": "Чанахи", "price": "22" }, { "name": "Пиво", "price": "9" }, { "name": "Картопля по селянськи", "price": "18" }, { "name": "Картопля фрі", "price": "16" }, { "name": "Хот-дог", "price": "8" }, { "name": "Бігос", "price": "19" }];
+},{"invariant":2}],165:[function(require,module,exports){
+var Menu = [{ "name": "Salad 'Cisar'", "price": "22" }, { "name": "Bread", "price": "1" }, { "name": "Chicken", "price": "32" }, { "name": "Salad 'Greek'", "price": "10" }, { "name": "Buckwheat soup", "price": "11" }, { "name": "Beer", "price": "22" }, { "name": "Fish", "price": "9" }, { "name": "French fries", "price": "18" }, { "name": "Baked fish", "price": "16" }, { "name": "Hot-dog", "price": "8" }, { "name": "Bigos", "price": "19" }];
 
 module.exports = Menu;
 
-},{}],165:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
  * 
