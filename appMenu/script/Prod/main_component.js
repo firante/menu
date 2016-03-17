@@ -19102,7 +19102,7 @@ var Table = React.createClass({
 
 
   handleClick: function () {
-    alert(Obj.ListStore.orderList[0].name);
+    alert(Obj.ListStore.getTotalAmount());
   },
 
   render: function () {
@@ -19142,6 +19142,14 @@ var ListStore = {
 
   getOrder: function () {
     return this.orderList;
+  },
+
+  getTotalAmount() {
+    var t_amount = 0;
+    this.orderList.forEach(function (value) {
+      t_amount += parseInt(value.price, 10);
+    });
+    return t_amount;
   }
 };
 

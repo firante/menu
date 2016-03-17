@@ -6,7 +6,7 @@ var Obj = require('./tr_component');
 var Table = React.createClass({
 
   handleClick: function() {
-    alert(Obj.ListStore.orderList[0].name);
+    alert(Obj.ListStore.getTotalAmount());
   },
 
   render: function () {

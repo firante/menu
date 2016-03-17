@@ -9,7 +9,15 @@ var ListStore = {
 
   getOrder: function() {
     return this.orderList;
-  }
+  },
+
+   getTotalAmount() {
+     var t_amount = 0;
+     this.orderList.forEach(function(value) {
+       t_amount += parseInt(value.price, 10);
+     });
+     return t_amount;
+   }
 };
 
 MicroEvent.mixin(ListStore);
