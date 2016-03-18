@@ -19355,25 +19355,21 @@ var Tr_Order = React.createClass({
       React.createElement(
         'td',
         null,
-        React.createElement(
-          'span',
-          {
-            className: 'spanMinus',
-            onClick: this.decrCount },
-          '-'
-        ),
+        React.createElement('input', {
+          type: 'button',
+          className: 'buttMinus',
+          value: '-',
+          onClick: this.decrCount }),
         React.createElement(
           'span',
           null,
           this.props.order.count
         ),
-        React.createElement(
-          'span',
-          {
-            className: 'spanPlus',
-            onClick: this.incrCount },
-          '+'
-        )
+        React.createElement('input', {
+          type: 'button',
+          value: '+',
+          className: 'buttPlus',
+          onClick: this.incrCount })
       ),
       React.createElement(
         'td',

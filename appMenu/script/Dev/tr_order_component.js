@@ -35,13 +35,17 @@ var Tr_Order = React.createClass({
           {this.props.order.name}
         </td>
         <td>
-          <span
-            className='spanMinus'
-            onClick={this.decrCount}>-</span>
+          <input
+            type='button'
+            className='buttMinus'
+            value='-'
+            onClick={this.decrCount} />
           <span>{this.props.order.count}</span>
-          <span
-            className='spanPlus'
-            onClick={this.incrCount}>+</span>
+          <input
+            type='button'
+            value='+'
+            className='buttPlus'
+            onClick={this.incrCount} />
         </td>
         <td>{this.props.order.count*this.props.order.price}</td>
         <td>

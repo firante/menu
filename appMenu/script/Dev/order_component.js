@@ -86,7 +86,7 @@ var Order = React.createClass({
             <tbody>
               {order_list}
               <tr id='totalsuma'>
-                <td>До оплати: </td>
+                <td>До сплати: </td>
                 <td></td>
                 <td>{this.props.totalSuma}</td>
                 <td></td>
