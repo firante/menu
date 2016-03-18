@@ -1,6 +1,6 @@
 var ReactDOM = require('react-dom');
 var React = require('react');
-var Table = require('./table_component');
+var Tr_Order = require('./tr_order_component');
 var Menu = require('../resourse/content');
 
 
@@ -36,47 +36,28 @@ var Order = React.createClass({
 
   render: function() {
     var order_list = this.props.orderList.map(function(value, index) {
-      return (
-
-      );
+      return (<Tr_Order order={value} key={index} />);
     });
     return (
-      <div className='div_order'>
-        <div id='topdf' className='div_order'>
-          <table className='order_table'>
-            <thead>
-              <tr>
-                <td className='td_name'> Dish Name </td>
-                <td className='td_small'> Count </td>
-                <td className='td_small'> Price </td>
-                <td className='td_small'> Total price </td>
-              </tr>
-            </thead>
-
-            <tbody>
-              {order_list}
-            </tbody>
-          </table>
-          <br />
-          <br />
-          <span className='fullPrice'> Payable: {this.props.fullPrice} </span>
-        </div>
-        <br />
-        <br />
-        <div className='div_order'>
-          <input
-            className='butt_toMenu'
-            type='button'
-            value='To menu'
-            onClick={this.handleToMenu} />
-          <input
-            className='butt_toPDF'
-            type='button'
-            value='To PDF'
-            onClick={this.handleToPdf}
-            />
-        </div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Count</td>
+            <td>Price</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          {order_list}
+          <tr id='totalsuma'>
+            <td>Total suma: </td>
+            <td></td>
+            <td>{this.props.totalSuma}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     );
   }
 });

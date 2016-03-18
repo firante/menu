@@ -1,45 +1,50 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Order = require('./order_component');
-var Obj = require('./tr_component');
+var Obj = require('./tr_table_component');
+var Menu = require('../resourse/content');
 
+
+var Tr = Obj.Tr;
+var ListStore = Obj.ListStore;
 
 
 var Table = React.createClass({
 
   componentDidMount: function() {
-    Obj.ListStore.bind('change', this.change);
+    Obj.ListStore.bind('change', this.changeOrder);
   },
 
   componentWillUnmount: function() {
-    Obj.ListStore.bind('change', this.change);
+    Obj.ListStore.unbind('change', this.changeOrder);
   },
 
-  change: function () {
-    Obj.ListStore.orderList.forEach(function(value) { alert(value.name); });
+  changeOrder: function () {
+    ReactDOM.render(<Order orderList={ListStore.getOrder()} totalSuma={ListStore.getTotalAmount()} />, document.getElementById('order'));
   },
-
   handleClick: function() {
-    ReactDOM.render(<Order orderList={Obj.ListStore.getOrder()} fullPrice={Obj.ListStore.getTotalAmount()} />,
-      document.getElementById('content'));
   },
 
   render: function () {
     var menuList = [];
     menuList = this.props.menu.map(function (value, index) {
-      return (<Obj.Tr peair={value} index={index} key={index} />);
+      return (<Tr peair={value} index={index} key={index} />);
     });
 
     return (
-      <div>
-      <table>
-        <tbody>
-          {menuList}
-        </tbody>
-      </table>
-
-      <input type='button' value='Order' onClick={this.handleClick} />
-      </div>
+        <table>
+          <thead>
+            <tr>
+              <td>Name</td>
+              <td>Count</td>
+              <td>Price</td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+            {menuList}
+          </tbody>
+        </table>
     );
   }
 });

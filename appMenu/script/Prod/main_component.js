@@ -19091,21 +19091,17 @@ var React = require('react');
 var Table = require('./table_component');
 var Menu = require('../resourse/content');
 
-ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementById('content'));
+ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementById('table'));
 
-},{"../resourse/content":165,"./table_component":162,"react":159,"react-dom":3}],161:[function(require,module,exports){
+},{"../resourse/content":166,"./table_component":162,"react":159,"react-dom":3}],161:[function(require,module,exports){
 var ReactDOM = require('react-dom');
 var React = require('react');
-var Table = require('./table_component');
+var Tr_Order = require('./tr_order_component');
 var Menu = require('../resourse/content');
 
 var Order = React.createClass({
   displayName: 'Order',
 
-
-  handleToMenu: function () {
-    ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementById('content'));
-  },
 
   handleToPdf: function () {
     var pdf = new jsPDF('p', 'pt', 'letter');
@@ -19135,101 +19131,55 @@ var Order = React.createClass({
 
   render: function () {
     var order_list = this.props.orderList.map(function (value, index) {
-      return React.createElement(
-        'tr',
-        { key: index },
-        React.createElement(
-          'td',
-          { className: 'td_name' },
-          value.name,
-          ' '
-        ),
-        React.createElement(
-          'td',
-          { className: 'td_small' },
-          value.count
-        ),
-        React.createElement(
-          'td',
-          { className: 'td_small' },
-          value.price
-        ),
-        React.createElement(
-          'td',
-          { className: 'td_small' },
-          value.price * value.count
-        )
-      );
+      return React.createElement(Tr_Order, { order: value, key: index });
     });
     return React.createElement(
-      'div',
-      { className: 'div_order' },
+      'table',
+      null,
       React.createElement(
-        'div',
-        { id: 'topdf', className: 'div_order' },
+        'thead',
+        null,
         React.createElement(
-          'table',
-          { className: 'order_table' },
+          'tr',
+          null,
           React.createElement(
-            'thead',
+            'td',
             null,
-            React.createElement(
-              'tr',
-              null,
-              React.createElement(
-                'td',
-                { className: 'td_name' },
-                ' Dish Name '
-              ),
-              React.createElement(
-                'td',
-                { className: 'td_small' },
-                ' Count '
-              ),
-              React.createElement(
-                'td',
-                { className: 'td_small' },
-                ' Price '
-              ),
-              React.createElement(
-                'td',
-                { className: 'td_small' },
-                ' Total price '
-              )
-            )
+            'Name'
           ),
           React.createElement(
-            'tbody',
+            'td',
             null,
-            order_list
-          )
-        ),
-        React.createElement('br', null),
-        React.createElement('br', null),
-        React.createElement(
-          'span',
-          { className: 'fullPrice' },
-          ' Payable: ',
-          this.props.fullPrice,
-          ' '
+            'Count'
+          ),
+          React.createElement(
+            'td',
+            null,
+            'Price'
+          ),
+          React.createElement('td', null)
         )
       ),
-      React.createElement('br', null),
-      React.createElement('br', null),
       React.createElement(
-        'div',
-        { className: 'div_order' },
-        React.createElement('input', {
-          className: 'butt_toMenu',
-          type: 'button',
-          value: 'To menu',
-          onClick: this.handleToMenu }),
-        React.createElement('input', {
-          className: 'butt_toPDF',
-          type: 'button',
-          value: 'To PDF',
-          onClick: this.handleToPdf
-        })
+        'tbody',
+        null,
+        order_list,
+        React.createElement(
+          'tr',
+          { id: 'totalsuma' },
+          React.createElement(
+            'td',
+            null,
+            'Total suma: '
+          ),
+          React.createElement('td', null),
+          React.createElement(
+            'td',
+            null,
+            this.props.totalSuma
+          ),
+          React.createElement('td', null)
+        )
       )
     );
   }
@@ -19237,60 +19187,158 @@ var Order = React.createClass({
 
 module.exports = Order;
 
-},{"../resourse/content":165,"./table_component":162,"react":159,"react-dom":3}],162:[function(require,module,exports){
+},{"../resourse/content":166,"./tr_order_component":163,"react":159,"react-dom":3}],162:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Order = require('./order_component');
-var Obj = require('./tr_component');
+var Obj = require('./tr_table_component');
+var Menu = require('../resourse/content');
+
+var Tr = Obj.Tr;
+var ListStore = Obj.ListStore;
 
 var Table = React.createClass({
   displayName: 'Table',
 
 
   componentDidMount: function () {
-    Obj.ListStore.bind('change', this.change);
+    Obj.ListStore.bind('change', this.changeOrder);
   },
 
   componentWillUnmount: function () {
-    Obj.ListStore.bind('change', this.change);
+    Obj.ListStore.unbind('change', this.changeOrder);
   },
 
-  change: function () {
-    Obj.ListStore.orderList.forEach(function (value) {
-      alert(value.name);
-    });
+  changeOrder: function () {
+    ReactDOM.render(React.createElement(Order, { orderList: ListStore.getOrder(), totalSuma: ListStore.getTotalAmount() }), document.getElementById('order'));
   },
-
-  handleClick: function () {
-    ReactDOM.render(React.createElement(Order, { orderList: Obj.ListStore.getOrder(), fullPrice: Obj.ListStore.getTotalAmount() }), document.getElementById('content'));
-  },
+  handleClick: function () {},
 
   render: function () {
     var menuList = [];
     menuList = this.props.menu.map(function (value, index) {
-      return React.createElement(Obj.Tr, { peair: value, index: index, key: index });
+      return React.createElement(Tr, { peair: value, index: index, key: index });
     });
 
     return React.createElement(
-      'div',
+      'table',
       null,
       React.createElement(
-        'table',
+        'thead',
         null,
         React.createElement(
-          'tbody',
+          'tr',
           null,
-          menuList
+          React.createElement(
+            'td',
+            null,
+            'Name'
+          ),
+          React.createElement(
+            'td',
+            null,
+            'Count'
+          ),
+          React.createElement(
+            'td',
+            null,
+            'Price'
+          ),
+          React.createElement('td', null)
         )
       ),
-      React.createElement('input', { type: 'button', value: 'Order', onClick: this.handleClick })
+      React.createElement(
+        'tbody',
+        null,
+        menuList
+      )
     );
   }
 });
 
 module.exports = Table;
 
-},{"./order_component":161,"./tr_component":163,"react":159,"react-dom":3}],163:[function(require,module,exports){
+},{"../resourse/content":166,"./order_component":161,"./tr_table_component":164,"react":159,"react-dom":3}],163:[function(require,module,exports){
+var React = require('react');
+var Tr_table = require('./tr_table_component');
+
+var AppDispatcher = Tr_table.Dispatcher;
+var ListStore = Tr_table.ListStore;
+
+var Tr_Order = React.createClass({
+  displayName: 'Tr_Order',
+
+  handleClick: function () {
+    AppDispatcher.dispatch({
+      eventName: 'removeFood',
+      item: { name: this.refs.name.innerText }
+    });
+  },
+
+  decrCount: function () {
+    AppDispatcher.dispatch({
+      eventName: 'decrCount',
+      item: { name: this.refs.name.innerText }
+    });
+  },
+
+  incrCount: function () {
+    AppDispatcher.dispatch({
+      eventName: 'incrCount',
+      item: { name: this.refs.name.innerText }
+    });
+  },
+
+  render: function () {
+    return React.createElement(
+      'tr',
+      null,
+      React.createElement(
+        'td',
+        {
+          ref: 'name' },
+        this.props.order.name
+      ),
+      React.createElement(
+        'td',
+        null,
+        React.createElement(
+          'span',
+          {
+            onClick: this.decrCount },
+          '-'
+        ),
+        React.createElement(
+          'span',
+          null,
+          this.props.order.count
+        ),
+        React.createElement(
+          'span',
+          { onClick: this.incrCount },
+          '+'
+        )
+      ),
+      React.createElement(
+        'td',
+        null,
+        this.props.order.count * this.props.order.price
+      ),
+      React.createElement(
+        'td',
+        null,
+        React.createElement('input', {
+          type: 'button',
+          value: 'X',
+          onClick: this.handleClick })
+      )
+    );
+  }
+});
+
+module.exports = Tr_Order;
+
+},{"./tr_table_component":164,"react":159}],164:[function(require,module,exports){
 var React = require('react');
 var Dispatcher = require('../resourse/Dispatcher');
 var MicroEvent = require('../resourse/microevent');
@@ -19310,6 +19358,38 @@ var ListStore = {
       t_amount += parseInt(value.price, 10) * parseInt(value.count, 10);
     });
     return t_amount;
+  },
+  addCount(payload) {
+    var ind = ListStore.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    if (ind !== -1) {
+      this.orderList[ind].count = +this.orderList[ind].count + +payload.item.count;
+    } else {
+      ListStore.orderList.push(payload.item);
+    }
+  },
+  removeFood(payload) {
+    var ind = this.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    this.orderList.splice(ind, 1);
+  },
+  decrCount(payload) {
+    var ind = this.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    this.orderList[ind].count--;
+    if (this.orderList[ind].count === 0) {
+      this.removeFood(payload);
+    }
+  },
+
+  incrCount(payload) {
+    var ind = this.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    this.orderList[ind].count++;
   }
 };
 
@@ -19318,51 +19398,33 @@ MicroEvent.mixin(ListStore);
 AppDispatcher.register(function (payload) {
   switch (payload.eventName) {
     case "addFood":
-      ListStore.orderList.push(payload.itemFood);
+      ListStore.addCount(payload);
       ListStore.trigger('change');
       break;
     case "removeFood":
-      var ind = ListStore.orderList.map(function (val) {
-        return val.name;
-      }).indexOf(payload.itemFood.name);
-      ListStore.orderList.splice(ind, 1);
+      ListStore.removeFood(payload);
+      ListStore.trigger('change');
       break;
-    case "changeCount":
-      ListStore.orderList = ListStore.orderList.map(function (val) {
-        if (val.name == payload.itemFood.name) {
-          val.count = payload.itemFood.count;
-          return val;
-        } else {
-          return val;
-        }
-      });
+    case "decrCount":
+      ListStore.decrCount(payload);
+      ListStore.trigger('change');
+      break;
+    case "incrCount":
+      ListStore.incrCount(payload);
+      ListStore.trigger('change');
       break;
     default:
-
+      break;
   }
 });
 
 var Tr = React.createClass({
   displayName: 'Tr',
 
-  handleChangeCheck: function () {
-    if (this.refs.checks.checked) {
-      AppDispatcher.dispatch({
-        eventName: 'addFood',
-        itemFood: { name: this.refs.name.innerText, count: this.refs.count.value, price: this.refs.price.innerText }
-      });
-    } else {
-      AppDispatcher.dispatch({
-        eventName: 'removeFood',
-        itemFood: { name: this.refs.name.innerText }
-      });
-    }
-  },
-
-  handleChangeCount: function () {
+  handleChangeClick: function () {
     AppDispatcher.dispatch({
-      eventName: 'changeCount',
-      itemFood: { name: this.refs.name.innerText, count: this.refs.count.value }
+      eventName: 'addFood',
+      item: { name: this.refs.name.innerText, count: this.refs.count.value, price: this.refs.price.innerText }
     });
   },
 
@@ -19372,12 +19434,9 @@ var Tr = React.createClass({
       null,
       React.createElement(
         'td',
-        null,
-        React.createElement('input', {
-          type: 'checkbox',
-          onChange: this.handleChangeCheck,
-          ref: 'checks'
-        })
+        {
+          ref: 'name' },
+        this.props.peair.name
       ),
       React.createElement(
         'td',
@@ -19386,28 +19445,30 @@ var Tr = React.createClass({
           type: 'text',
           className: 'inp_count',
           defaultValue: '1',
-          ref: 'count',
-          onChange: this.handleChangeCount })
-      ),
-      React.createElement(
-        'td',
-        {
-          ref: 'name' },
-        this.props.peair.name
+          ref: 'count' })
       ),
       React.createElement(
         'td',
         {
           ref: 'price' },
         this.props.peair.price
+      ),
+      React.createElement(
+        'td',
+        null,
+        React.createElement('input', {
+          type: 'button',
+          value: 'Add',
+          onClick: this.handleChangeClick
+        })
       )
     );
   }
 });
 
-module.exports = { "Tr": Tr, "ListStore": ListStore };
+module.exports = { "Tr": Tr, "ListStore": ListStore, 'Dispatcher': AppDispatcher };
 
-},{"../resourse/Dispatcher":164,"../resourse/microevent":166,"react":159}],164:[function(require,module,exports){
+},{"../resourse/Dispatcher":165,"../resourse/microevent":167,"react":159}],165:[function(require,module,exports){
 /**
  * Copyright (c) 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -19624,12 +19685,12 @@ class Dispatcher {
 
 module.exports = Dispatcher;
 
-},{"invariant":2}],165:[function(require,module,exports){
+},{"invariant":2}],166:[function(require,module,exports){
 var Menu = [{ "name": "Salad 'Cisar'", "price": "22" }, { "name": "Bread", "price": "1" }, { "name": "Chicken", "price": "32" }, { "name": "Salad 'Greek'", "price": "10" }, { "name": "Buckwheat soup", "price": "11" }, { "name": "Beer", "price": "22" }, { "name": "Fish", "price": "9" }, { "name": "French fries", "price": "18" }, { "name": "Baked fish", "price": "16" }, { "name": "Hot-dog", "price": "8" }, { "name": "Bigos", "price": "19" }];
 
 module.exports = Menu;
 
-},{}],166:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
  * 
