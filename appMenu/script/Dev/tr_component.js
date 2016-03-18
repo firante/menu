@@ -26,6 +26,7 @@ AppDispatcher.register(function(payload) {
   switch (payload.eventName) {
     case "addFood":
       ListStore.orderList.push(payload.itemFood);
+      ListStore.trigger('change');
       break;
     case "removeFood":
       var ind = ListStore.orderList.map(function(val) {return val.name; }).indexOf(payload.itemFood.name);

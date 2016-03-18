@@ -19094,10 +19094,10 @@ var Menu = require('../resourse/content');
 ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementById('content'));
 
 },{"../resourse/content":165,"./table_component":162,"react":159,"react-dom":3}],161:[function(require,module,exports){
-var React = require('react');
 var ReactDOM = require('react-dom');
-var Menu = require('../resourse/content');
+var React = require('react');
 var Table = require('./table_component');
+var Menu = require('../resourse/content');
 
 var Order = React.createClass({
   displayName: 'Order',
@@ -19118,8 +19118,8 @@ var Order = React.createClass({
         margins = {
       top: 20,
       bottom: 20,
-      left: 15,
-      right: 15
+      left: 20,
+      right: 20
     };
     pdf.setFont("Times-Roman");
     pdf.setFontType("bold");
@@ -19189,7 +19189,7 @@ var Order = React.createClass({
               React.createElement(
                 'td',
                 { className: 'td_small' },
-                ' Price per piece '
+                ' Price '
               ),
               React.createElement(
                 'td',
@@ -19246,6 +19246,20 @@ var Obj = require('./tr_component');
 var Table = React.createClass({
   displayName: 'Table',
 
+
+  componentDidMount: function () {
+    Obj.ListStore.bind('change', this.change);
+  },
+
+  componentWillUnmount: function () {
+    Obj.ListStore.bind('change', this.change);
+  },
+
+  change: function () {
+    Obj.ListStore.orderList.forEach(function (value) {
+      alert(value.name);
+    });
+  },
 
   handleClick: function () {
     ReactDOM.render(React.createElement(Order, { orderList: Obj.ListStore.getOrder(), fullPrice: Obj.ListStore.getTotalAmount() }), document.getElementById('content'));
@@ -19305,6 +19319,7 @@ AppDispatcher.register(function (payload) {
   switch (payload.eventName) {
     case "addFood":
       ListStore.orderList.push(payload.itemFood);
+      ListStore.trigger('change');
       break;
     case "removeFood":
       var ind = ListStore.orderList.map(function (val) {

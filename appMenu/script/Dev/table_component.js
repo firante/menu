@@ -7,6 +7,18 @@ var Obj = require('./tr_component');
 
 var Table = React.createClass({
 
+  componentDidMount: function() {
+    Obj.ListStore.bind('change', this.change);
+  },
+
+  componentWillUnmount: function() {
+    Obj.ListStore.bind('change', this.change);
+  },
+
+  change: function () {
+    Obj.ListStore.orderList.forEach(function(value) { alert(value.name); });
+  },
+
   handleClick: function() {
     ReactDOM.render(<Order orderList={Obj.ListStore.getOrder()} fullPrice={Obj.ListStore.getTotalAmount()} />,
       document.getElementById('content'));

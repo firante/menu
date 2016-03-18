@@ -1,13 +1,10 @@
-var React = require('react');
 var ReactDOM = require('react-dom');
-var Menu = require('../resourse/content');
+var React = require('react');
 var Table = require('./table_component');
+var Menu = require('../resourse/content');
+
 
 var Order = React.createClass({
-
-  handleToMenu: function() {
-    ReactDOM.render(<Table menu={Menu} />, document.getElementById('content'));
-  },
 
   handleToPdf: function() {
     var pdf = new jsPDF('p', 'pt', 'letter');
@@ -35,17 +32,12 @@ var Order = React.createClass({
       function (dispose) {
           pdf.save('Order.pdf');
       }, margins);
-},
+  },
 
   render: function() {
     var order_list = this.props.orderList.map(function(value, index) {
       return (
-        <tr key={index}>
-          <td className='td_name'>{value.name} </td>
-          <td className='td_small'>{value.count}</td>
-          <td className='td_small'>{value.price}</td>
-          <td className='td_small'>{value.price*value.count}</td>
-        </tr>
+
       );
     });
     return (
