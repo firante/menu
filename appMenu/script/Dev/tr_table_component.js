@@ -18,6 +18,7 @@ var ListStore = {
      });
      return t_amount;
    },
+
    addCount(payload) {
      var ind = ListStore.orderList.map(function(val) {return val.name; }).indexOf(payload.item.name);
      if(ind !== -1) {
@@ -26,10 +27,12 @@ var ListStore = {
        ListStore.orderList.push(payload.item);
      }
    },
+
    removeFood (payload) {
      var ind = this.orderList.map(function(val) {return val.name; }).indexOf(payload.item.name);
      this.orderList.splice(ind, 1);
    },
+
    decrCount(payload) {
      var ind = this.orderList.map(function(val) {return val.name; }).indexOf(payload.item.name);
      this.orderList[ind].count--;
@@ -80,11 +83,13 @@ var Tr = React.createClass({
   render: function() {
     return (
       <tr>
-      <td
-        ref = 'name'>
-        {this.props.peair.name}
-      </td>
-        <td>
+        <td
+          className='td_name'
+          ref = 'name'>
+          {this.props.peair.name}
+        </td>
+        <td
+          className='td_other'>
           <input
             type="text"
             className="inp_count"
@@ -92,10 +97,12 @@ var Tr = React.createClass({
             ref = 'count'/>
         </td>
         <td
+          className='td_other'
           ref = 'price'>
           {this.props.peair.price}
         </td>
-        <td>
+        <td
+          className='td_other'>
           <input
             type="button"
             value='Add'

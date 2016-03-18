@@ -1,20 +1,81 @@
 #content {
-  width: 100%;
+  width: 80%;
+  margin: auto;
 }
-#totalsuma td {
-  padding-top: 20px;
-}
+/*
+* divs leyout
+*/
 
 div.table {
-  width: 60%;
+  width: 55%;
   float: left;
 }
 
 div.order {
-  width: 40%;
+  width: 35%;
+  float: right;
+}
+
+div.header {
+  text-align: center;
+  width: 100%;
+  float: left;
+  font-size: 24px;
+  color: rgba(29, 97, 95, 1);
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+div.body {
+  width: 100%;
   float: left;
 }
 
+table {
+  width: 100%;
+  text-align: center;
+  border: 0;
+
+}
+
+table tr td:first-child {
+  padding-left: 20px;
+}
+
+table thead tr td {
+  background: rgba(36, 38, 46, 0.6);
+  font-size: 20px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+table tbody tr td {
+  background: rgba(89, 178, 153, 0.3);
+  font-size: 16px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+table tr td:first-child {
+  width: 55%;
+  text-align: left;
+}
+table tr td:nth-child(n+2) {
+  width: 15%;
+  text-align: center;
+}
+
+
+
+
 .inp_count {
   width: 20px;
+  text-align: center;
+}
+
+
+
+
+#totalsuma td {
+  padding-top: 20px;
 }

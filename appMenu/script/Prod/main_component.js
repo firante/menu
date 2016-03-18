@@ -19098,35 +19098,45 @@ var ReactDOM = require('react-dom');
 var React = require('react');
 var Tr_Order = require('./tr_order_component');
 var Menu = require('../resourse/content');
+var Obj = require('./tr_table_component');
+
+var ListStore = Obj.ListStore;
 
 var Order = React.createClass({
   displayName: 'Order',
 
 
   handleToPdf: function () {
-    var pdf = new jsPDF('p', 'pt', 'letter');
-    var source = $('#topdf').html();
-    var specialElementHandlers = {
-      '#bypassme': function (element, renderer) {
-        return true;
-      }
-    },
-        margins = {
-      top: 20,
-      bottom: 20,
-      left: 20,
-      right: 20
+
+    var arr = [[{ text: 'Назва товару', alignment: 'left', fillColor: 'grey' }, { text: 'Кількість', alignment: 'center', fillColor: 'grey' }, { text: 'Ціна', alignment: 'center', fillColor: 'grey' }, { text: 'Сума', alignment: 'center', fillColor: 'grey' }]];
+    ListStore.getOrder().forEach(function (value) {
+      var total = +value.count * +value.price;
+      arr.push([value.name.toString(), { text: value.count.toString(), alignment: 'center' }, { text: value.price.toString(), alignment: 'center' }, { text: total.toString(), alignment: 'center' }]);
+    });
+    var docDefinition = {
+      pageMargins: [80, 50, 80, 50],
+      content: [{
+        alignment: 'center',
+        columns: [{
+          text: 'РАХУНОК',
+          bold: true
+        }]
+      }, {
+        table: {
+          headerRows: 1,
+          widths: ['55%', '15%', '15%', '15%'],
+          body: arr
+        }
+      }, {
+        columns: [{
+          alignment: 'right',
+          margin: [0, 25, 0, 0],
+          text: 'До оплати: ' + ListStore.getTotalAmount().toString(),
+          bold: true
+        }]
+      }]
     };
-    pdf.setFont("Times-Roman");
-    pdf.setFontType("bold");
-    pdf.setFontSize(9);
-    pdf.setFontStyle('italic');
-    pdf.fromHTML(source, margins.left, margins.top, {
-      'width': margins.width,
-      'elementHandlers': specialElementHandlers
-    }, function (dispose) {
-      pdf.save('Order.pdf');
-    }, margins);
+    pdfMake.createPdf(docDefinition).download('order.pdf');
   },
 
   render: function () {
@@ -19134,51 +19144,79 @@ var Order = React.createClass({
       return React.createElement(Tr_Order, { order: value, key: index });
     });
     return React.createElement(
-      'table',
+      'div',
       null,
       React.createElement(
-        'thead',
-        null,
-        React.createElement(
-          'tr',
-          null,
-          React.createElement(
-            'td',
-            null,
-            'Name'
-          ),
-          React.createElement(
-            'td',
-            null,
-            'Count'
-          ),
-          React.createElement(
-            'td',
-            null,
-            'Price'
-          ),
-          React.createElement('td', null)
-        )
+        'div',
+        { className: 'header' },
+        'Замовлення'
       ),
       React.createElement(
-        'tbody',
-        null,
-        order_list,
+        'div',
+        { className: 'body' },
         React.createElement(
-          'tr',
-          { id: 'totalsuma' },
+          'table',
+          null,
           React.createElement(
-            'td',
+            'thead',
             null,
-            'Total suma: '
+            React.createElement(
+              'tr',
+              null,
+              React.createElement(
+                'td',
+                null,
+                'Назва страви'
+              ),
+              React.createElement(
+                'td',
+                null,
+                'Кількість'
+              ),
+              React.createElement(
+                'td',
+                null,
+                'Ціна'
+              ),
+              React.createElement('td', null)
+            )
           ),
-          React.createElement('td', null),
           React.createElement(
-            'td',
+            'tbody',
             null,
-            this.props.totalSuma
-          ),
-          React.createElement('td', null)
+            order_list,
+            React.createElement(
+              'tr',
+              { id: 'totalsuma' },
+              React.createElement(
+                'td',
+                null,
+                'До оплати: '
+              ),
+              React.createElement('td', null),
+              React.createElement(
+                'td',
+                null,
+                this.props.totalSuma
+              ),
+              React.createElement('td', null)
+            ),
+            React.createElement(
+              'tr',
+              { id: 'topdf' },
+              React.createElement('td', null),
+              React.createElement('td', null),
+              React.createElement('td', null),
+              React.createElement(
+                'td',
+                null,
+                React.createElement('input', {
+                  type: 'button',
+                  value: 'toPdf',
+                  onClick: this.handleToPdf })
+              )
+            )
+          )
         )
       )
     );
@@ -19187,9 +19225,9 @@ var Order = React.createClass({
 
 module.exports = Order;
 
-},{"../resourse/content":166,"./tr_order_component":163,"react":159,"react-dom":3}],162:[function(require,module,exports){
-var React = require('react');
+},{"../resourse/content":166,"./tr_order_component":163,"./tr_table_component":164,"react":159,"react-dom":3}],162:[function(require,module,exports){
 var ReactDOM = require('react-dom');
+var React = require('react');
 var Order = require('./order_component');
 var Obj = require('./tr_table_component');
 var Menu = require('../resourse/content');
@@ -19221,36 +19259,49 @@ var Table = React.createClass({
     });
 
     return React.createElement(
-      'table',
+      'div',
       null,
       React.createElement(
-        'thead',
-        null,
-        React.createElement(
-          'tr',
-          null,
-          React.createElement(
-            'td',
-            null,
-            'Name'
-          ),
-          React.createElement(
-            'td',
-            null,
-            'Count'
-          ),
-          React.createElement(
-            'td',
-            null,
-            'Price'
-          ),
-          React.createElement('td', null)
-        )
+        'div',
+        { className: 'header' },
+        'Меню'
       ),
       React.createElement(
-        'tbody',
-        null,
-        menuList
+        'div',
+        { className: 'body' },
+        React.createElement(
+          'table',
+          null,
+          React.createElement(
+            'thead',
+            null,
+            React.createElement(
+              'tr',
+              null,
+              React.createElement(
+                'td',
+                null,
+                'Назва страви'
+              ),
+              React.createElement(
+                'td',
+                null,
+                'Кількість'
+              ),
+              React.createElement(
+                'td',
+                null,
+                'Ціна'
+              ),
+              React.createElement('td', null)
+            )
+          ),
+          React.createElement(
+            'tbody',
+            null,
+            menuList
+          )
+        )
       )
     );
   }
@@ -19267,6 +19318,7 @@ var ListStore = Tr_table.ListStore;
 
 var Tr_Order = React.createClass({
   displayName: 'Tr_Order',
+
 
   handleClick: function () {
     AppDispatcher.dispatch({
@@ -19359,6 +19411,7 @@ var ListStore = {
     });
     return t_amount;
   },
+
   addCount(payload) {
     var ind = ListStore.orderList.map(function (val) {
       return val.name;
@@ -19369,12 +19422,14 @@ var ListStore = {
       ListStore.orderList.push(payload.item);
     }
   },
+
   removeFood(payload) {
     var ind = this.orderList.map(function (val) {
       return val.name;
     }).indexOf(payload.item.name);
     this.orderList.splice(ind, 1);
   },
+
   decrCount(payload) {
     var ind = this.orderList.map(function (val) {
       return val.name;

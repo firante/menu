@@ -2,36 +2,66 @@ var ReactDOM = require('react-dom');
 var React = require('react');
 var Tr_Order = require('./tr_order_component');
 var Menu = require('../resourse/content');
+var Obj = require('./tr_table_component');
+
+var ListStore = Obj.ListStore;
 
 
 var Order = React.createClass({
 
   handleToPdf: function() {
-    var pdf = new jsPDF('p', 'pt', 'letter');
-    var source = $('#topdf').html();
-    var specialElementHandlers = {
-          '#bypassme': function (element, renderer) {
-              return true;
+
+    var arr = [
+      [
+        {text:'Назва товару', alignment : 'left', fillColor: 'grey'},
+        {text: 'Кількість', alignment : 'center', fillColor: 'grey'},
+        {text: 'Ціна', alignment : 'center', fillColor: 'grey'},
+        {text: 'Сума', alignment : 'center', fillColor: 'grey'}
+      ]
+    ];
+    ListStore.getOrder().forEach(function(value) {
+      var total = +value.count * +value.price;
+      arr.push(
+        [
+          value.name.toString(),
+          {text: value.count.toString(), alignment : 'center'},
+          {text: value.price.toString(), alignment : 'center'},
+          {text: total.toString(), alignment : 'center'}
+        ]
+      );
+    });
+    var docDefinition = {
+      pageMargins: [ 80, 50, 80, 50 ],
+      content: [
+        {
+          alignment : 'center',
+          columns: [
+            {
+              text: 'РАХУНОК',
+              bold: true
+            }
+          ]
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['55%','15%','15%','15%'],
+            body: arr
           }
-      },
-      margins = {
-          top: 20,
-          bottom: 20,
-          left: 20,
-          right: 20
-      };
-      pdf.setFont("Times-Roman");
-      pdf.setFontType("bold");
-      pdf.setFontSize(9);
-      pdf.setFontStyle('italic');
-      pdf.fromHTML( source, margins.left, margins.top,
-              {
-                  'width': margins.width,
-                  'elementHandlers': specialElementHandlers
-              },
-      function (dispose) {
-          pdf.save('Order.pdf');
-      }, margins);
+        },
+        {
+          columns: [
+            {
+              alignment: 'right',
+              margin: [0, 25, 0, 0],
+              text: 'До оплати: ' + ListStore.getTotalAmount().toString(),
+              bold: true
+            }
+          ]
+        }
+      ]
+    };
+    pdfMake.createPdf(docDefinition).download('order.pdf');
   },
 
   render: function() {
@@ -39,25 +69,43 @@ var Order = React.createClass({
       return (<Tr_Order order={value} key={index} />);
     });
     return (
-      <table>
-        <thead>
-          <tr>
-            <td>Name</td>
-            <td>Count</td>
-            <td>Price</td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-          {order_list}
-          <tr id='totalsuma'>
-            <td>Total suma: </td>
-            <td></td>
-            <td>{this.props.totalSuma}</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <div className='header'>
+          Замовлення
+        </div>
+        <div className='body'>
+          <table>
+            <thead>
+              <tr>
+                <td>Назва страви</td>
+                <td>Кількість</td>
+                <td>Ціна</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              {order_list}
+              <tr id='totalsuma'>
+                <td>До оплати: </td>
+                <td></td>
+                <td>{this.props.totalSuma}</td>
+                <td></td>
+              </tr>
+              <tr id='topdf'>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  <input
+                    type='button'
+                    value='toPdf'
+                    onClick={this.handleToPdf}/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 });

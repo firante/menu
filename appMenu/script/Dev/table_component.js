@@ -1,5 +1,5 @@
-var React = require('react');
 var ReactDOM = require('react-dom');
+var React = require('react');
 var Order = require('./order_component');
 var Obj = require('./tr_table_component');
 var Menu = require('../resourse/content');
@@ -32,19 +32,26 @@ var Table = React.createClass({
     });
 
     return (
-        <table>
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>Count</td>
-              <td>Price</td>
-              <td></td>
-            </tr>
-          </thead>
-          <tbody>
-            {menuList}
-          </tbody>
-        </table>
+      <div>
+        <div className='header'>
+          Меню
+        </div>
+        <div className='body'>
+          <table>
+            <thead>
+              <tr>
+                <td className='td_name'>Назва страви</td>
+                <td className='td_other'>Кількість</td>
+                <td className='td_other'>Ціна</td>
+                <td className='td_other'></td>
+              </tr>
+            </thead>
+            <tbody>
+              {menuList}
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   }
 });

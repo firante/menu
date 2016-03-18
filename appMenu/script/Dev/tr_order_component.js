@@ -5,6 +5,7 @@ var AppDispatcher = Tr_table.Dispatcher;
 var ListStore = Tr_table.ListStore;
 
 var Tr_Order = React.createClass({
+
   handleClick: function() {
     AppDispatcher.dispatch({
       eventName: 'removeFood',
