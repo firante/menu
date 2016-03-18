@@ -73,7 +73,7 @@ AppDispatcher.register(function(payload) {
 });
 
 var Tr = React.createClass({
-  handleChangeClick: function() {
+  handleAddClick: function() {
     AppDispatcher.dispatch({
       eventName: 'addFood',
       item: {name: this.refs.name.innerText, count: this.refs.count.value, price: this.refs.price.innerText}
@@ -104,9 +104,10 @@ var Tr = React.createClass({
         <td
           className='td_other'>
           <input
+            className='buttAdd'
             type="button"
             value='Add'
-            onClick={this.handleChangeClick}
+            onClick={this.handleAddClick}
             />
         </td>
       </tr>

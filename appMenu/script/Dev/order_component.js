@@ -74,7 +74,7 @@ var Order = React.createClass({
           Замовлення
         </div>
         <div className='body'>
-          <table>
+          <table className='table_order'>
             <thead>
               <tr>
                 <td>Назва страви</td>
@@ -97,6 +97,7 @@ var Order = React.createClass({
                 <td></td>
                 <td>
                   <input
+                    className='buttToPdf'
                     type='button'
                     value='toPdf'
                     onClick={this.handleToPdf}/>

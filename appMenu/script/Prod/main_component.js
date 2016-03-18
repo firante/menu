@@ -19156,7 +19156,7 @@ var Order = React.createClass({
         { className: 'body' },
         React.createElement(
           'table',
-          null,
+          { className: 'table_order' },
           React.createElement(
             'thead',
             null,
@@ -19211,6 +19211,7 @@ var Order = React.createClass({
                 'td',
                 null,
                 React.createElement('input', {
+                  className: 'buttToPdf',
                   type: 'button',
                   value: 'toPdf',
                   onClick: this.handleToPdf })
@@ -19280,20 +19281,20 @@ var Table = React.createClass({
               null,
               React.createElement(
                 'td',
-                null,
+                { className: 'td_name' },
                 'Назва страви'
               ),
               React.createElement(
                 'td',
-                null,
+                { className: 'td_other' },
                 'Кількість'
               ),
               React.createElement(
                 'td',
-                null,
+                { className: 'td_other' },
                 'Ціна'
               ),
-              React.createElement('td', null)
+              React.createElement('td', { className: 'td_other' })
             )
           ),
           React.createElement(
@@ -19357,6 +19358,7 @@ var Tr_Order = React.createClass({
         React.createElement(
           'span',
           {
+            className: 'spanMinus',
             onClick: this.decrCount },
           '-'
         ),
@@ -19367,7 +19369,9 @@ var Tr_Order = React.createClass({
         ),
         React.createElement(
           'span',
-          { onClick: this.incrCount },
+          {
+            className: 'spanPlus',
+            onClick: this.incrCount },
           '+'
         )
       ),
@@ -19380,8 +19384,9 @@ var Tr_Order = React.createClass({
         'td',
         null,
         React.createElement('input', {
+          className: 'buttRemove',
           type: 'button',
-          value: 'X',
+          value: '+',
           onClick: this.handleClick })
       )
     );
@@ -19476,7 +19481,7 @@ AppDispatcher.register(function (payload) {
 var Tr = React.createClass({
   displayName: 'Tr',
 
-  handleChangeClick: function () {
+  handleAddClick: function () {
     AppDispatcher.dispatch({
       eventName: 'addFood',
       item: { name: this.refs.name.innerText, count: this.refs.count.value, price: this.refs.price.innerText }
@@ -19490,12 +19495,14 @@ var Tr = React.createClass({
       React.createElement(
         'td',
         {
+          className: 'td_name',
           ref: 'name' },
         this.props.peair.name
       ),
       React.createElement(
         'td',
-        null,
+        {
+          className: 'td_other' },
         React.createElement('input', {
           type: 'text',
           className: 'inp_count',
@@ -19505,16 +19512,19 @@ var Tr = React.createClass({
       React.createElement(
         'td',
         {
+          className: 'td_other',
           ref: 'price' },
         this.props.peair.price
       ),
       React.createElement(
         'td',
-        null,
+        {
+          className: 'td_other' },
         React.createElement('input', {
+          className: 'buttAdd',
           type: 'button',
           value: 'Add',
-          onClick: this.handleChangeClick
+          onClick: this.handleAddClick
         })
       )
     );
