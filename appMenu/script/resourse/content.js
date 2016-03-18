@@ -1,15 +1,25 @@
+/*
+* input menu 
+*/
+
 var Menu = [
-  {"name": "Salad 'Cisar'", "price": "22"},
-  {"name": "Bread", "price": "1"},
-  {"name": "Chicken", "price": "32"},
-  {"name": "Salad 'Greek'", "price": "10"},
-  {"name": "Buckwheat soup", "price": "11"},
-  {"name": "Beer", "price": "22"},
-  {"name": "Fish", "price": "9"},
-  {"name": "French fries", "price": "18"},
-  {"name": "Baked fish", "price": "16"},
-  {"name": "Hot-dog", "price": "8"},
-  {"name": "Bigos", "price": "19"}
+  {"name": "Капрезе", "price": "50"},
+  {"name": "Сирна симфонія", "price": "75"},
+  {"name": "Асорті м'ясне", "price": "90"},
+  {"name": "Асорті овочеве", "price": "40"},
+  {"name": "Оливковий мікс", "price": "18"},
+  {"name": "Закуска українська радість сало", "price": "23"},
+  {"name": "Язик з cоусом", "price": "48"},
+  {"name": "Мікс домашніх солінь", "price": "40"},
+  {"name": "Оселедець", "price": "25"},
+  {"name": "Салат з телятини та винограду", "price": "40"},
+  {"name": "Салат Цезар з куркою", "price": "45"},
+  {"name": "Салат Цезар з сьомгою", "price": "60"},
+  {"name": "Стейк з свинини 100г", "price": "25"},
+  {"name": "Стейк з телятини 100г", "price": "30"},
+  {"name": "Стейк з лосося", "price": "45"},
+  {"name": "Деруни по-Львівськи", "price": "25"},
+  {"name": "Салат Грецький", "price": "40"}
 ];
 
 module.exports = Menu;

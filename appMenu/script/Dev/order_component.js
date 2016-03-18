@@ -1,10 +1,14 @@
+/*
+* component for generate order table
+*/
+
 var ReactDOM = require('react-dom');
 var React = require('react');
 var Tr_Order = require('./tr_order_component');
 var Menu = require('../resourse/content');
-var Obj = require('./tr_table_component');
+var FluxController = require('../resourse/fluxController');
 
-var ListStore = Obj.ListStore;
+var ListStore = FluxController.ListStore;
 
 
 var Order = React.createClass({
@@ -54,7 +58,7 @@ var Order = React.createClass({
             {
               alignment: 'right',
               margin: [0, 25, 0, 0],
-              text: 'До оплати: ' + ListStore.getTotalAmount().toString(),
+              text: 'До сплати: ' + ListStore.getTotalAmount().toString(),
               bold: true
             }
           ]

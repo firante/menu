@@ -1,8 +1,12 @@
-var React = require('react');
-var Tr_table = require('./tr_table_component');
+/*
+* component for generate tr list for order table
+*/
 
-var AppDispatcher = Tr_table.Dispatcher;
-var ListStore = Tr_table.ListStore;
+var React = require('react');
+var FluxController = require('../resourse/fluxController');
+
+var AppDispatcher = FluxController.Dispatcher;
+var ListStore = FluxController.ListStore;
 
 var Tr_Order = React.createClass({
 

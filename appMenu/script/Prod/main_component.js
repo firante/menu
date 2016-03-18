@@ -19086,6 +19086,10 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":27}],160:[function(require,module,exports){
+/*
+* component for first rendering content
+*/
+
 var ReactDOM = require('react-dom');
 var React = require('react');
 var Table = require('./table_component');
@@ -19093,14 +19097,18 @@ var Menu = require('../resourse/content');
 
 ReactDOM.render(React.createElement(Table, { menu: Menu }), document.getElementById('table'));
 
-},{"../resourse/content":166,"./table_component":162,"react":159,"react-dom":3}],161:[function(require,module,exports){
+},{"../resourse/content":167,"./table_component":162,"react":159,"react-dom":3}],161:[function(require,module,exports){
+/*
+* component for generate order table
+*/
+
 var ReactDOM = require('react-dom');
 var React = require('react');
 var Tr_Order = require('./tr_order_component');
 var Menu = require('../resourse/content');
-var Obj = require('./tr_table_component');
+var FluxController = require('../resourse/fluxController');
 
-var ListStore = Obj.ListStore;
+var ListStore = FluxController.ListStore;
 
 var Order = React.createClass({
   displayName: 'Order',
@@ -19131,7 +19139,7 @@ var Order = React.createClass({
         columns: [{
           alignment: 'right',
           margin: [0, 25, 0, 0],
-          text: 'До оплати: ' + ListStore.getTotalAmount().toString(),
+          text: 'До сплати: ' + ListStore.getTotalAmount().toString(),
           bold: true
         }]
       }]
@@ -19191,7 +19199,7 @@ var Order = React.createClass({
               React.createElement(
                 'td',
                 null,
-                'До оплати: '
+                'До сплати: '
               ),
               React.createElement('td', null),
               React.createElement(
@@ -19226,26 +19234,30 @@ var Order = React.createClass({
 
 module.exports = Order;
 
-},{"../resourse/content":166,"./tr_order_component":163,"./tr_table_component":164,"react":159,"react-dom":3}],162:[function(require,module,exports){
+},{"../resourse/content":167,"../resourse/fluxController":168,"./tr_order_component":163,"react":159,"react-dom":3}],162:[function(require,module,exports){
+/*
+* component for generate menu table
+*/
+
 var ReactDOM = require('react-dom');
 var React = require('react');
 var Order = require('./order_component');
-var Obj = require('./tr_table_component');
+var FluxController = require('../resourse/fluxController');
 var Menu = require('../resourse/content');
+var Tr = require('./tr_table_component');
 
-var Tr = Obj.Tr;
-var ListStore = Obj.ListStore;
+var ListStore = FluxController.ListStore;
 
 var Table = React.createClass({
   displayName: 'Table',
 
 
   componentDidMount: function () {
-    Obj.ListStore.bind('change', this.changeOrder);
+    ListStore.bind('change', this.changeOrder);
   },
 
   componentWillUnmount: function () {
-    Obj.ListStore.unbind('change', this.changeOrder);
+    ListStore.unbind('change', this.changeOrder);
   },
 
   changeOrder: function () {
@@ -19310,12 +19322,16 @@ var Table = React.createClass({
 
 module.exports = Table;
 
-},{"../resourse/content":166,"./order_component":161,"./tr_table_component":164,"react":159,"react-dom":3}],163:[function(require,module,exports){
-var React = require('react');
-var Tr_table = require('./tr_table_component');
+},{"../resourse/content":167,"../resourse/fluxController":168,"./order_component":161,"./tr_table_component":164,"react":159,"react-dom":3}],163:[function(require,module,exports){
+/*
+* component for generate tr list for order table
+*/
 
-var AppDispatcher = Tr_table.Dispatcher;
-var ListStore = Tr_table.ListStore;
+var React = require('react');
+var FluxController = require('../resourse/fluxController');
+
+var AppDispatcher = FluxController.Dispatcher;
+var ListStore = FluxController.ListStore;
 
 var Tr_Order = React.createClass({
   displayName: 'Tr_Order',
@@ -19391,88 +19407,15 @@ var Tr_Order = React.createClass({
 
 module.exports = Tr_Order;
 
-},{"./tr_table_component":164,"react":159}],164:[function(require,module,exports){
+},{"../resourse/fluxController":168,"react":159}],164:[function(require,module,exports){
+/*
+* component for generate tr list for menu table
+*/
+
 var React = require('react');
-var Dispatcher = require('../resourse/Dispatcher');
-var MicroEvent = require('../resourse/microevent');
+var FluxController = require('../resourse/fluxController');
 
-var AppDispatcher = new Dispatcher();
-
-var ListStore = {
-  orderList: [],
-
-  getOrder: function () {
-    return this.orderList;
-  },
-
-  getTotalAmount() {
-    var t_amount = 0;
-    this.orderList.forEach(function (value) {
-      t_amount += parseInt(value.price, 10) * parseInt(value.count, 10);
-    });
-    return t_amount;
-  },
-
-  addCount(payload) {
-    var ind = ListStore.orderList.map(function (val) {
-      return val.name;
-    }).indexOf(payload.item.name);
-    if (ind !== -1) {
-      this.orderList[ind].count = +this.orderList[ind].count + +payload.item.count;
-    } else {
-      ListStore.orderList.push(payload.item);
-    }
-  },
-
-  removeFood(payload) {
-    var ind = this.orderList.map(function (val) {
-      return val.name;
-    }).indexOf(payload.item.name);
-    this.orderList.splice(ind, 1);
-  },
-
-  decrCount(payload) {
-    var ind = this.orderList.map(function (val) {
-      return val.name;
-    }).indexOf(payload.item.name);
-    this.orderList[ind].count--;
-    if (this.orderList[ind].count === 0) {
-      this.removeFood(payload);
-    }
-  },
-
-  incrCount(payload) {
-    var ind = this.orderList.map(function (val) {
-      return val.name;
-    }).indexOf(payload.item.name);
-    this.orderList[ind].count++;
-  }
-};
-
-MicroEvent.mixin(ListStore);
-
-AppDispatcher.register(function (payload) {
-  switch (payload.eventName) {
-    case "addFood":
-      ListStore.addCount(payload);
-      ListStore.trigger('change');
-      break;
-    case "removeFood":
-      ListStore.removeFood(payload);
-      ListStore.trigger('change');
-      break;
-    case "decrCount":
-      ListStore.decrCount(payload);
-      ListStore.trigger('change');
-      break;
-    case "incrCount":
-      ListStore.incrCount(payload);
-      ListStore.trigger('change');
-      break;
-    default:
-      break;
-  }
-});
+var AppDispatcher = FluxController.Dispatcher;
 
 var Tr = React.createClass({
   displayName: 'Tr',
@@ -19527,9 +19470,9 @@ var Tr = React.createClass({
   }
 });
 
-module.exports = { "Tr": Tr, "ListStore": ListStore, 'Dispatcher': AppDispatcher };
+module.exports = Tr;
 
-},{"../resourse/Dispatcher":165,"../resourse/microevent":167,"react":159}],165:[function(require,module,exports){
+},{"../resourse/fluxController":168,"react":159}],165:[function(require,module,exports){
 /**
  * Copyright (c) 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -19747,11 +19690,6 @@ class Dispatcher {
 module.exports = Dispatcher;
 
 },{"invariant":2}],166:[function(require,module,exports){
-var Menu = [{ "name": "Salad 'Cisar'", "price": "22" }, { "name": "Bread", "price": "1" }, { "name": "Chicken", "price": "32" }, { "name": "Salad 'Greek'", "price": "10" }, { "name": "Buckwheat soup", "price": "11" }, { "name": "Beer", "price": "22" }, { "name": "Fish", "price": "9" }, { "name": "French fries", "price": "18" }, { "name": "Baked fish", "price": "16" }, { "name": "Hot-dog", "price": "8" }, { "name": "Bigos", "price": "19" }];
-
-module.exports = Menu;
-
-},{}],167:[function(require,module,exports){
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
  * 
@@ -19808,4 +19746,102 @@ if (typeof module !== "undefined" && 'exports' in module) {
 	module.exports = MicroEvent;
 }
 
-},{}]},{},[160]);
+},{}],167:[function(require,module,exports){
+/*
+* input menu 
+*/
+
+var Menu = [{ "name": "Капрезе", "price": "50" }, { "name": "Сирна симфонія", "price": "75" }, { "name": "Асорті м'ясне", "price": "90" }, { "name": "Асорті овочеве", "price": "40" }, { "name": "Оливковий мікс", "price": "18" }, { "name": "Закуска українська радість сало", "price": "23" }, { "name": "Язик з cоусом", "price": "48" }, { "name": "Мікс домашніх солінь", "price": "40" }, { "name": "Оселедець", "price": "25" }, { "name": "Салат з телятини та винограду", "price": "40" }, { "name": "Салат Цезар з куркою", "price": "45" }, { "name": "Салат Цезар з сьомгою", "price": "60" }, { "name": "Стейк з свинини 100г", "price": "25" }, { "name": "Стейк з телятини 100г", "price": "30" }, { "name": "Стейк з лосося", "price": "45" }, { "name": "Деруни по-Львівськи", "price": "25" }, { "name": "Салат Грецький", "price": "40" }];
+
+module.exports = Menu;
+
+},{}],168:[function(require,module,exports){
+/*
+* events control
+* processing ListStore and controls
+*/
+
+var Dispatcher = require('../libs/Dispatcher');
+var MicroEvent = require('../libs/microevent');
+
+var AppDispatcher = new Dispatcher();
+
+var ListStore = {
+  orderList: [],
+
+  getOrder: function () {
+    return this.orderList;
+  },
+
+  getTotalAmount() {
+    var t_amount = 0;
+    this.orderList.forEach(function (value) {
+      t_amount += parseInt(value.price, 10) * parseInt(value.count, 10);
+    });
+    return t_amount;
+  },
+
+  addCount(payload) {
+    var ind = ListStore.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    if (ind !== -1) {
+      this.orderList[ind].count = +this.orderList[ind].count + +payload.item.count;
+    } else {
+      ListStore.orderList.push(payload.item);
+    }
+  },
+
+  removeFood(payload) {
+    var ind = this.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    this.orderList.splice(ind, 1);
+  },
+
+  decrCount(payload) {
+    var ind = this.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    this.orderList[ind].count--;
+    if (this.orderList[ind].count === 0) {
+      this.removeFood(payload);
+    }
+  },
+
+  incrCount(payload) {
+    var ind = this.orderList.map(function (val) {
+      return val.name;
+    }).indexOf(payload.item.name);
+    this.orderList[ind].count++;
+  }
+};
+
+MicroEvent.mixin(ListStore);
+
+AppDispatcher.register(function (payload) {
+  switch (payload.eventName) {
+    case "addFood":
+      ListStore.addCount(payload);
+      ListStore.trigger('change');
+      break;
+    case "removeFood":
+      ListStore.removeFood(payload);
+      ListStore.trigger('change');
+      break;
+    case "decrCount":
+      ListStore.decrCount(payload);
+      ListStore.trigger('change');
+      break;
+    case "incrCount":
+      ListStore.incrCount(payload);
+      ListStore.trigger('change');
+      break;
+    default:
+      break;
+  }
+});
+
+module.exports = { "ListStore": ListStore, 'Dispatcher': AppDispatcher };
+
+},{"../libs/Dispatcher":165,"../libs/microevent":166}]},{},[160]);

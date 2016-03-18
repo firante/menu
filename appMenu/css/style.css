@@ -36,6 +36,10 @@ table {
   border-collapse:collapse;
 }
 
+table td {
+
+}
+
 table tr td:first-child {
   padding-left: 20px;
 }
@@ -57,7 +61,8 @@ table tbody tr td {
   font-size: 16px;
   padding-top: 3px;
   padding-bottom: 3px;
-  border: none !important;
+  border-bottom: 1px solid white;
+    border-collapse:collapse;
 }
 
 table tr td:first-child {
@@ -76,7 +81,8 @@ table tr td:nth-child(n+2) {
 
 .inp_count {
   width: 100%;
-  background: rgba(89, 178, 153, 0.2);
+  height: 100%;
+  background: rgba(89, 178, 153, 0.1);
   text-align: center;
   border: 0px solid;
 }
@@ -85,19 +91,15 @@ table tr td:nth-child(n+2) {
 }
 
 .buttAdd {
-  background: rgba(89, 178, 153, 0.0);
-  width: 80%;
+  background: rgba(89, 178, 153, 0.1);
+  width: 99%;
   height: 100%;
   border: 0px solid;
-  border-top-left-radius:15px;
-  border-top-right-radius:15px;
-  border-bottom-left-radius:15px;
-  border-bottom-right-radius:15px;
 }
 .buttAdd:hover {
-  -moz-box-shadow:2px 2px 1px #000000;
-  -webkit-box-shadow:2px 2px 1px #000000;
-  box-shadow:2px 2px 1px #000000;
+  -moz-box-shadow:1px 1px 1px #000000;
+  -webkit-box-shadow:1px 1px 1px #000000;
+  box-shadow:1px 1px 1px #000000;
 }
 .buttAdd:active {
   transform: translateY(2px) translateX(2px);
@@ -130,19 +132,15 @@ table tr td:nth-child(n+2) {
 
 .buttToPdf {
   border: 0px solid;
-  border-top-left-radius:75px;
-  border-top-right-radius:75px;
-  border-bottom-left-radius:75px;
-  border-bottom-right-radius:75px;
   margin-right: 30px;
   font-size: 18px;
   width: 70px;
   height: 30px;
 }
 .buttToPdf:hover {
-  -moz-box-shadow:2px 2px 1px #000000;
-  -webkit-box-shadow:2px 2px 1px #000000;
-  box-shadow:2px 2px 1px #000000;
+  -moz-box-shadow:1px 1px 1px #000000;
+  -webkit-box-shadow:1px 1px 1px #000000;
+  box-shadow:1px 1px 1px #000000;
 }
 .buttToPdf:active {
   transform: translateY(2px) translateX(2px);
@@ -154,18 +152,18 @@ table tr td:nth-child(n+2) {
 .buttMinus {
   background: rgba(89, 178, 153, 0.1);
   border: 0;
-  width: 24px;
+  width: 20px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   color: rgba(255, 0, 0, 0.6);
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 .buttMinus:hover {
   color: rgba(255, 0, 0, 1);
-  -moz-box-shadow:2px 2px 1px #000000;
-  -webkit-box-shadow:2px 2px 1px #000000;
-  box-shadow:2px 2px 1px #000000;
+  -moz-box-shadow:1px 1px 1px #000000;
+  -webkit-box-shadow:1px 1px 1px #000000;
+  box-shadow:1px 1px 1px #000000;
 }
 .buttMinus:focus {
   outline: none;
@@ -175,16 +173,15 @@ table tr td:nth-child(n+2) {
   transform: translateY(2px) translateX(2px);
 }
 
-
 .buttPlus {
   background: rgba(89, 178, 153, 0.1);
   border: 0;
-  width: 24px;
+  width: 20px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   color: rgba(0, 0, 255, 0.6);
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .buttPlus:hover {

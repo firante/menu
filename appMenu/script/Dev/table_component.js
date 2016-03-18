@@ -1,22 +1,24 @@
+/*
+* component for generate menu table
+*/
+
 var ReactDOM = require('react-dom');
 var React = require('react');
 var Order = require('./order_component');
-var Obj = require('./tr_table_component');
+var FluxController = require('../resourse/fluxController');
 var Menu = require('../resourse/content');
+var Tr = require('./tr_table_component');
 
-
-var Tr = Obj.Tr;
-var ListStore = Obj.ListStore;
-
+var ListStore = FluxController.ListStore;
 
 var Table = React.createClass({
 
   componentDidMount: function() {
-    Obj.ListStore.bind('change', this.changeOrder);
+    ListStore.bind('change', this.changeOrder);
   },
 
   componentWillUnmount: function() {
-    Obj.ListStore.unbind('change', this.changeOrder);
+    ListStore.unbind('change', this.changeOrder);
   },
 
   changeOrder: function () {
